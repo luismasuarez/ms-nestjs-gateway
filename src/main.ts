@@ -5,7 +5,7 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { apiReference } from '@scalar/nestjs-api-reference';
 
-async function setupApiDocs(app: INestApplication, globalPrefix: string, logger: Logger) {
+async function setupApiDocs(app: INestApplication, globalPrefix: string) {
   const config = new DocumentBuilder()
     .setTitle('NestJS MS Gateway')
     .setDescription('API Gateway para autenticación, pagos y servicios comunes')
@@ -20,10 +20,6 @@ async function setupApiDocs(app: INestApplication, globalPrefix: string, logger:
   });
 
   app.use(`/${globalPrefix}/reference`, apiReference({ url: openapiPath }));
-
-  logger.log(`Scalar docs on http://localhost:${process.env.PORT ?? 3000}/${globalPrefix}/reference`);
-  logger.log(`OpenAPI spec on http://localhost:${process.env.PORT ?? 3000}/${globalPrefix}/openapi.json`);
-
   return document;
 }
 
@@ -46,7 +42,7 @@ async function bootstrap() {
 
   const port = process.env.PORT ?? 3000;
 
-  await setupApiDocs(app, globalPrefix, logger);
+  await setupApiDocs(app, globalPrefix);
 
   await app.listen(port);
   logger.log(`API Gateway running on http://localhost:${port}`);
