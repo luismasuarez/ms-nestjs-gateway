@@ -15,7 +15,7 @@ async function main() {
   // Crear usuario host
   const host = await prisma.user.create({
     data: {
-      email: 'host@airbnb.com',
+      email: 'admin@gateway.com',
       password: '$2a$10$abcdefghijklmnopqrstuvwxyz',
       name: 'John Host',
       role: 'HOST',
@@ -25,7 +25,7 @@ async function main() {
   // Crear usuario guest
   const guest = await prisma.user.create({
     data: {
-      email: 'guest@airbnb.com',
+      email: 'guest@gateway.com',
       password: '$2a$10$abcdefghijklmnopqrstuvwxyz',
       name: 'Jane Guest',
       role: 'GUEST',
