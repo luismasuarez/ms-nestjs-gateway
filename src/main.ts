@@ -1,9 +1,31 @@
-import { Logger, ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe, INestApplication } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { apiReference } from '@scalar/nestjs-api-reference';
+
+async function setupApiDocs(app: INestApplication, globalPrefix: string, logger: Logger) {
+  const config = new DocumentBuilder()
+    .setTitle('NestJS MS Gateway')
+    .setDescription('API Gateway para autenticación, pagos y servicios comunes')
+    .setVersion('0.0.1')
+    .build();
+
+  const document = SwaggerModule.createDocument(app, config);
+
+  const openapiPath = `/${globalPrefix}/openapi.json`;
+  app.getHttpAdapter().get(openapiPath, (_req, res) => {
+    res.json(document);
+  });
+
+  app.use(`/${globalPrefix}/reference`, apiReference({ url: openapiPath }));
+
+  logger.log(`Scalar docs on http://localhost:${process.env.PORT ?? 3000}/${globalPrefix}/reference`);
+  logger.log(`OpenAPI spec on http://localhost:${process.env.PORT ?? 3000}/${globalPrefix}/openapi.json`);
+
+  return document;
+}
 
 async function bootstrap() {
   const logger = new Logger('Bootstrap');
@@ -24,24 +46,7 @@ async function bootstrap() {
 
   const port = process.env.PORT ?? 3000;
 
-  const config = new DocumentBuilder()
-    .setTitle('NestJS MS Gateway')
-    .setDescription('API Gateway para autenticación, pagos y servicios comunes')
-    .setVersion('0.0.1')
-    .build();
-
-  const document = SwaggerModule.createDocument(app, config);
-
-  app.getHttpAdapter().get(`/${globalPrefix}/openapi.json`, (_req, res) => {
-    res.json(document);
-  });
-
-  app.use(
-    `/${globalPrefix}/reference`,
-    apiReference({
-      url: `/${globalPrefix}/openapi.json`,
-    }),
-  );
+  await setupApiDocs(app, globalPrefix, logger);
 
   await app.listen(port);
   logger.log(`API Gateway running on http://localhost:${port}`);
