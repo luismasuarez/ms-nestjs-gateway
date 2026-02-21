@@ -22,6 +22,8 @@ async function bootstrap() {
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
 
+  const port = process.env.PORT ?? 3000;
+
   const config = new DocumentBuilder()
     .setTitle('Mi API')
     .setDescription('Documentación de mi API')
@@ -30,16 +32,20 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, config);
 
-  // 👇 Scalar bajo el mismo prefijo
+  app.getHttpAdapter().get(`/${globalPrefix}/openapi.json`, (_req, res) => {
+    res.json(document);
+  });
+
   app.use(
     `/${globalPrefix}/reference`,
     apiReference({
-      content: document,
+      url: `/${globalPrefix}/openapi.json`,
     }),
   );
 
-  await app.listen(process.env.PORT ?? 3000);
-  logger.log(`API Gateway running on http://localhost:${process.env.PORT ?? 3000}`);
-  logger.log(`Scalar docs on http://localhost:${process.env.PORT ?? 3000}/${globalPrefix}/reference`);
+  await app.listen(port);
+  logger.log(`API Gateway running on http://localhost:${port}`);
+  logger.log(`Scalar docs on http://localhost:${port}/${globalPrefix}/reference`);
+  logger.log(`OpenAPI spec on http://localhost:${port}/${globalPrefix}/openapi.json`);
 }
 bootstrap();
