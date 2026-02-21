@@ -1,7 +1,6 @@
 import { PrismaPg } from '@prisma/adapter-pg';
 
 // Run npm run prisma:generate to generate the Prisma Client based on the schema.prisma file
-import { serializeArray } from '../utils/helpers';
 import { PrismaClient } from './generated/prisma/client';
 
 
@@ -33,32 +32,8 @@ async function main() {
     },
   });
 
-  // Crear propiedad
-  const property = await prisma.property.create({
-    data: {
-      title: 'Beautiful Beach House',
-      description: 'Amazing ocean view with private beach access',
-      price: 250.0,
-      maxGuests: 6,
-      bedrooms: 3,
-      bathrooms: 2,
-      propertyType: 'HOUSE',
-      status: 'PUBLISHED',
-      address: '123 Beach Road',
-      city: 'Miami',
-      state: 'FL',
-      country: 'USA',
-      zipCode: '33139',
-      latitude: 25.7617,
-      longitude: -80.1918,
-      hostId: host.id,
-      amenities: serializeArray(['WiFi', 'Pool', 'Beach Access', 'BBQ']),
-      images: serializeArray(['beach1.jpg', 'beach2.jpg', 'beach3.jpg']),
-    },
-  });
-
   console.log('Seed completed!');
-  console.log({ host, guest, property });
+  console.log({ host, guest });
 }
 
 main()
