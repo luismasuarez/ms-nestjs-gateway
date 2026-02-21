@@ -8,10 +8,10 @@
  *
  * 🟢 You can import this file directly.
  */
-export type * from './models/User'
-export type * from './models/Property'
-export type * from './models/Booking'
-export type * from './models/Payment'
-export type * from './models/Review'
-export type * from './models/Favorite'
-export type * from './commonInputTypes'
+export type * from './models/User.js'
+export type * from './models/Property.js'
+export type * from './models/Booking.js'
+export type * from './models/Payment.js'
+export type * from './models/Review.js'
+export type * from './models/Favorite.js'
+export type * from './commonInputTypes.js'
