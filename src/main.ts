@@ -25,9 +25,9 @@ async function bootstrap() {
   const port = process.env.PORT ?? 3000;
 
   const config = new DocumentBuilder()
-    .setTitle('Mi API')
-    .setDescription('Documentación de mi API')
-    .setVersion('1.0.0')
+    .setTitle('NestJS MS Gateway')
+    .setDescription('API Gateway para autenticación, pagos y servicios comunes')
+    .setVersion('0.0.1')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
